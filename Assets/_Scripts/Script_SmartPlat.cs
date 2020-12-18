@@ -1,4 +1,11 @@
-﻿using System.Collections;
+﻿// Script_SmartPlat.cs
+// Student Name: Bohan Cheng
+// Student #: 101130599
+// Last Modified: 2020/12/18
+// Description: This script take care off platform movement and shrinking.
+// History: Added header description
+
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -16,6 +23,7 @@ public class Script_SmartPlat : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        // get a copy of this transform's starting scale
         OSize = transform.localScale;
         audio = GetComponent<AudioSource>();
     }
@@ -23,18 +31,13 @@ public class Script_SmartPlat : MonoBehaviour
     private void Update()
     {
         GoUpAndDown();
-        if(ShouldShrink)
-        {
-            Shrink();
-        }
-        else
-        {
-            Resize();
-        }
+        if(ShouldShrink) { Shrink(); }
+        else { Resize(); }
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
+        // When the player stand on the platform, the platform will start shrinking
         if (collision.transform.tag == "Player")
         {
             ShouldShrink = true;
@@ -45,10 +48,8 @@ public class Script_SmartPlat : MonoBehaviour
 
     private void OnCollisionExit2D(Collision2D collision)
     {
-        if(collision.transform.tag == "Player")
-        {
-            Invoke("ResetSize", 2.0f);
-        }
+        // When the player leaves the platform, wait for 2 seconds and then reset platform
+        if(collision.transform.tag == "Player") { Invoke("ResetSize", 2.0f); }
     }
 
     void ResetSize()
@@ -70,10 +71,11 @@ public class Script_SmartPlat : MonoBehaviour
 
     void GoUpAndDown()
     {
+        // This function lets the game object float up and down
         Vector3 NewLocation = gameObject.transform.position;
         float RunningTime = Time.time;
         float DeltaHeight = (Mathf.Sin(RunningTime + Time.deltaTime) - Mathf.Sin(RunningTime));
-        NewLocation.y += DeltaHeight * UpDownRange;       //Scale our height by a factor of 20
+        NewLocation.y += DeltaHeight * UpDownRange;
         transform.position = NewLocation;
     }
 }
